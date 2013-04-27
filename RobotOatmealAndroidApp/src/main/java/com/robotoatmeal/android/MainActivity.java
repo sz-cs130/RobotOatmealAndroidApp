@@ -17,8 +17,6 @@ public class MainActivity
     extends Activity
 {
 
-    @ViewById
-    TextView hello;
     @RestService
     RestClient restClient;
 
@@ -28,7 +26,6 @@ public class MainActivity
 
     @UiThread
     void doSomethingElseOnUiThread() {
-        hello.setText("Hi!");
     }
 
     @Background
