@@ -26,10 +26,10 @@
         <activity
             android:name="com.robotoatmeal.android.SearchResultsActivity"
             android:label="@string/title_activity_search_results"
-            android:parentActivityName="com.robotoatmeal.android.MainActivity" >
+            android:parentActivityName="com.robotoatmeal.android.MainActivity_" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.robotoatmeal.android.MainActivity" />
+                android:value="com.robotoatmeal.android.MainActivity_" />
         </activity>
     </application>
 
