@@ -1,14 +1,30 @@
 package com.robotoatmeal.android;
 
-import android.os.Bundle;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.os.Build;
+import android.widget.TextView;
 
+import com.googlecode.androidannotations.annotations.AfterViews;
+import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.ViewById;
+
+@EActivity(R.layout.activity_search_results)
 public class SearchResultsActivity extends Activity {
+	
+	@ViewById
+	TextView query;
+	private String message;
+
+	@AfterViews
+	void updateQuery() {
+		query.setText("Oops, we can't find any coupons for " + message);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +32,9 @@ public class SearchResultsActivity extends Activity {
 		setContentView(R.layout.activity_search_results);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		Intent intent = getIntent();
+		message = intent.getStringExtra("query");
 	}
 
 	/**
