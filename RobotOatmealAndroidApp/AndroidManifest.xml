@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="16" />
+        android:minSdkVersion="14"
+        android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -30,6 +30,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.robotoatmeal.android.MainActivity_" />
+        </activity>
+        <activity
+            android:name="com.robotoatmeal.android.CouponDetailActivity_"
+            android:label="@string/title_activity_coupon_detail"
+            android:parentActivityName="com.robotoatmeal.android.SearchResultsActivity_" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.robotoatmeal.android.SearchResultsActivity_" />
         </activity>
     </application>
 

@@ -9,9 +9,18 @@
     tools:context=".SearchResultsActivity" >
 
     <TextView
-        android:id="@+id/query"
+        android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
+
+    <GridLayout
+        android:id="@+id/grid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/message" >
+
+    </GridLayout>
 
 </RelativeLayout>

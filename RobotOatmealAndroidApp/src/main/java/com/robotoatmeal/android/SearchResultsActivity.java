@@ -1,5 +1,8 @@
 package com.robotoatmeal.android;
 
+import java.io.StringReader;
+import java.util.ArrayList;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -8,8 +11,14 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -18,12 +27,42 @@ import com.googlecode.androidannotations.annotations.ViewById;
 public class SearchResultsActivity extends Activity {
 	
 	@ViewById
-	TextView query;
-	private String message;
+	TextView message;
+	private String query;
+	private String queryResponse;
 
 	@AfterViews
 	void updateQuery() {
-		query.setText("Oops, we can't find any coupons for " + message);
+		if (query == null)
+			message.setText("Oops, we can't find any coupons for " + query);
+		else {
+			message.setText(query);
+			Gson gson = new Gson();
+			JsonReader reader = new JsonReader(new StringReader(queryResponse));
+			reader.setLenient(true);
+			Container container = gson.fromJson(reader, Container.class);
+			GridLayout grid = (GridLayout) findViewById(R.id.grid);
+			ArrayList<Button> views = new ArrayList<Button>();
+			for (final Coupon coupon: container.coupon) {
+				Button couponButton = new Button(this);
+				couponButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
+						Gson gson = new Gson();
+						String detail = gson.toJson(coupon, Coupon.class);
+						intent.putExtra("detail", detail);
+						startActivity(intent);
+					}
+					
+				});
+				
+				views.add(couponButton);
+				views.get(views.size()-1).setText(coupon.couponCode);
+				grid.addView(views.get(views.size()-1));
+			}
+		}
 	}
 
 	@Override
@@ -34,7 +73,8 @@ public class SearchResultsActivity extends Activity {
 		setupActionBar();
 		
 		Intent intent = getIntent();
-		message = intent.getStringExtra("query");
+		query = intent.getStringExtra("query");
+		queryResponse = intent.getStringExtra("queryResponse");
 	}
 
 	/**
