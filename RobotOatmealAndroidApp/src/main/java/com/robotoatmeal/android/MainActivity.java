@@ -1,6 +1,9 @@
 
 package com.robotoatmeal.android;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
@@ -51,6 +54,20 @@ public class MainActivity
     void button1Clicked(View view) {
     	Intent intent = new Intent(this, SearchResultsActivity_.class);
     	intent.putExtra("query", editText1.getText().toString());
+    	InputStream is = getResources().openRawResource(R.raw.test);
+    	StringBuffer fileContent = new StringBuffer("");
+
+    	byte[] buffer = new byte[1024];
+
+    	try {
+			while (is.read(buffer) != -1) {
+				fileContent.append(new String(buffer));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	String testQuery = fileContent.toString();
+    	intent.putExtra("queryResponse", testQuery);
     	startActivity(intent);
     }
 
