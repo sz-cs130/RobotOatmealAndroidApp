@@ -6,7 +6,6 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.googlecode.androidannotations.annotations.AfterViews;
@@ -29,26 +28,20 @@ public class CouponDetailActivity extends Activity {
 	
 	@AfterViews
 	void updateText() {
-		// TODO: debug exception
-		try {
 		description.setText(coupon.description);
 		merchantId.setText("" + coupon.merchantId);
 		couponCode.setText(coupon.couponCode);
-		} catch (Exception e) {
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-			couponCode.setText(e.toString());
-		}
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_coupon_detail);
-		// Show the Up button in the action bar.
-		setupActionBar();
 		String detail = getIntent().getStringExtra("detail");
 		Gson gson = new Gson();
 		coupon = gson.fromJson(detail, Coupon.class);
+		setContentView(R.layout.activity_coupon_detail);
+		// Show the Up button in the action bar.
+		setupActionBar();
 	}
 
 	/**
