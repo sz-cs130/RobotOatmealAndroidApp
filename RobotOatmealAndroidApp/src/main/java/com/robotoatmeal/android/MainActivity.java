@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -23,18 +22,15 @@ import com.robotoatmeal.android.rest.RestClient;
 public class MainActivity
     extends Activity
 {
-	static final String QUERY = "query";
-	static final String RESPONSE = "queryResponse";
+	static final String SEARCH = "search";
+	static final String RESULTS = "results";
+	static final String COUPON_DETAIL = "couponDetail";
 	
 	@ViewById
-	EditText editText1;
+	EditText searchBar;
 
     @RestService
     RestClient restClient;
-
-    @AfterViews
-    void afterViews() {
-    }
 
     @UiThread
     void doSomethingElseOnUiThread() {
@@ -52,10 +48,12 @@ public class MainActivity
         return true;
     }
     
-    @Click(R.id.button1) 
-    void button1Clicked(View view) {
+    @Click(R.id.searchButton) 
+    void searchButtonClicked(View view) {
     	Intent intent = new Intent(this, SearchResultsActivity_.class);
-    	intent.putExtra(QUERY, editText1.getText().toString());
+    	String search = searchBar.getText().toString();
+    	intent.putExtra(SEARCH, search);
+    	/* TEST CODE */
     	InputStream is = getResources().openRawResource(R.raw.test);
     	StringBuffer fileContent = new StringBuffer("");
 
@@ -68,8 +66,9 @@ public class MainActivity
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	String testQuery = fileContent.toString();
-    	intent.putExtra(RESPONSE, testQuery);
+    	String results = fileContent.toString();
+    	/* END TEST CODE*/
+    	intent.putExtra(RESULTS, results);
     	startActivity(intent);
     }
 

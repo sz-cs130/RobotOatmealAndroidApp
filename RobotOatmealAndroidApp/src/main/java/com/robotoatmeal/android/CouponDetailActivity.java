@@ -36,9 +36,11 @@ public class CouponDetailActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		String detail = getIntent().getStringExtra("detail");
+		
+		String couponDetail = getIntent().getStringExtra(MainActivity.COUPON_DETAIL);
 		Gson gson = new Gson();
-		coupon = gson.fromJson(detail, Coupon.class);
+		coupon = gson.fromJson(couponDetail, Coupon.class);
+		
 		setContentView(R.layout.activity_coupon_detail);
 		// Show the Up button in the action bar.
 		setupActionBar();
