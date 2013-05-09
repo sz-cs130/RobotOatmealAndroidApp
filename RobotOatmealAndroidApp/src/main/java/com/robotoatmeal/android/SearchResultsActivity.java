@@ -29,21 +29,23 @@ public class SearchResultsActivity extends Activity {
 	
 	@ViewById
 	TextView message;
-	private String query;
-	private String response;
+	private String search;
+	private String results;
 
 	@AfterViews
-	void updateQuery() {
-		if (query == null || response == null)
-			message.setText("Oops, we can't find any coupons for " + query);
+	void updateViews() {
+		if (search == null || results == null)
+			message.setText("Oops, we can't find any coupons for " + search);
 		else {
-			message.setText(query);
+			message.setText("Search results for" + search);
+			
 			Gson gson = new Gson();
-			JsonReader reader = new JsonReader(new StringReader(response));
+			JsonReader reader = new JsonReader(new StringReader(results));
 			reader.setLenient(true);
+			
 			Container container = gson.fromJson(reader, Container.class);
-			GridLayout grid = (GridLayout) findViewById(R.id.grid);
 			ArrayList<Button> views = new ArrayList<Button>();
+			GridLayout grid = (GridLayout) findViewById(R.id.grid);
 			for (final Coupon coupon: container.coupon) {
 				Button couponButton = new Button(this);
 				couponButton.setOnClickListener(new OnClickListener() {
@@ -52,8 +54,8 @@ public class SearchResultsActivity extends Activity {
 					public void onClick(View v) {
 						Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
 						Gson gson = new Gson();
-						String detail = gson.toJson(coupon, Coupon.class);
-						intent.putExtra("detail", detail);
+						String couponDetail = gson.toJson(coupon, Coupon.class);
+						intent.putExtra(MainActivity.COUPON_DETAIL, couponDetail);
 						startActivity(intent);
 					}
 					
@@ -71,26 +73,23 @@ public class SearchResultsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		Intent intent = getIntent();
-		query = intent.getStringExtra(MainActivity.QUERY);
-		response = intent.getStringExtra(MainActivity.RESPONSE);
-		if (query == null || response == null) {
+		search = intent.getStringExtra(MainActivity.SEARCH);
+		results = intent.getStringExtra(MainActivity.RESULTS);
+		if (search == null || results == null) {
 			SharedPreferences queries = getSharedPreferences("queries", 0);
-			query = queries.getString(MainActivity.QUERY, null);
-			response = queries.getString(MainActivity.RESPONSE, null);
+			search = queries.getString(MainActivity.SEARCH, null);
+			results = queries.getString(MainActivity.RESULTS, null);
+		} else {
+			SharedPreferences queries = getSharedPreferences("queries", 0);
+			SharedPreferences.Editor editor = queries.edit();
+			editor.putString(MainActivity.SEARCH, search);
+			editor.putString(MainActivity.RESULTS, results);
+			editor.commit();
 		}
+		
 		setContentView(R.layout.activity_search_results);
 		// Show the Up button in the action bar.
 		setupActionBar();
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		SharedPreferences queries = getSharedPreferences("queries", 0);
-		SharedPreferences.Editor editor = queries.edit();
-		editor.putString(MainActivity.QUERY, query);
-		editor.putString(MainActivity.RESPONSE, response);
-		editor.commit();
 	}
 
 	/**
