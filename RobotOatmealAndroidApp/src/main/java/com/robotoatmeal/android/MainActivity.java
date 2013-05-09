@@ -23,6 +23,8 @@ import com.robotoatmeal.android.rest.RestClient;
 public class MainActivity
     extends Activity
 {
+	static final String QUERY = "query";
+	static final String RESPONSE = "queryResponse";
 	
 	@ViewById
 	EditText editText1;
@@ -53,7 +55,7 @@ public class MainActivity
     @Click(R.id.button1) 
     void button1Clicked(View view) {
     	Intent intent = new Intent(this, SearchResultsActivity_.class);
-    	intent.putExtra("query", editText1.getText().toString());
+    	intent.putExtra(QUERY, editText1.getText().toString());
     	InputStream is = getResources().openRawResource(R.raw.test);
     	StringBuffer fileContent = new StringBuffer("");
 
@@ -67,7 +69,7 @@ public class MainActivity
 			e.printStackTrace();
 		}
     	String testQuery = fileContent.toString();
-    	intent.putExtra("queryResponse", testQuery);
+    	intent.putExtra(RESPONSE, testQuery);
     	startActivity(intent);
     }
 

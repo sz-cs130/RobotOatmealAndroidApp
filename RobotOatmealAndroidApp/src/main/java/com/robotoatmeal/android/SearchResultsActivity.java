@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -29,16 +30,16 @@ public class SearchResultsActivity extends Activity {
 	@ViewById
 	TextView message;
 	private String query;
-	private String queryResponse;
+	private String response;
 
 	@AfterViews
 	void updateQuery() {
-		if (query == null)
+		if (query == null || response == null)
 			message.setText("Oops, we can't find any coupons for " + query);
 		else {
 			message.setText(query);
 			Gson gson = new Gson();
-			JsonReader reader = new JsonReader(new StringReader(queryResponse));
+			JsonReader reader = new JsonReader(new StringReader(response));
 			reader.setLenient(true);
 			Container container = gson.fromJson(reader, Container.class);
 			GridLayout grid = (GridLayout) findViewById(R.id.grid);
@@ -68,13 +69,28 @@ public class SearchResultsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Intent intent = getIntent();
+		query = intent.getStringExtra(MainActivity.QUERY);
+		response = intent.getStringExtra(MainActivity.RESPONSE);
+		if (query == null || response == null) {
+			SharedPreferences queries = getSharedPreferences("queries", 0);
+			query = queries.getString(MainActivity.QUERY, null);
+			response = queries.getString(MainActivity.RESPONSE, null);
+		}
 		setContentView(R.layout.activity_search_results);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
-		Intent intent = getIntent();
-		query = intent.getStringExtra("query");
-		queryResponse = intent.getStringExtra("queryResponse");
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		SharedPreferences queries = getSharedPreferences("queries", 0);
+		SharedPreferences.Editor editor = queries.edit();
+		editor.putString(MainActivity.QUERY, query);
+		editor.putString(MainActivity.RESPONSE, response);
+		editor.commit();
 	}
 
 	/**
