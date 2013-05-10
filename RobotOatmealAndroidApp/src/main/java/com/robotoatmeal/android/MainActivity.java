@@ -28,9 +28,10 @@ public class MainActivity
 	
 	@ViewById
 	EditText searchBar;
-
+/*
     @RestService
     RestClient restClient;
+*/
 
     @UiThread
     void doSomethingElseOnUiThread() {
@@ -38,7 +39,7 @@ public class MainActivity
 
     @Background
     void doSomethingInBackground() {
-        restClient.main();
+        //restClient.main();
         doSomethingElseOnUiThread();
     }
 
