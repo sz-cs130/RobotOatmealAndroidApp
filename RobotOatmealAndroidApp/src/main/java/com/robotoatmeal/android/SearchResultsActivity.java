@@ -43,7 +43,7 @@ public class SearchResultsActivity extends Activity {
 			JsonReader reader = new JsonReader(new StringReader(results));
 			reader.setLenient(true);
 			
-			Container container = gson.fromJson(reader, Container.class);
+			CouponContainer container = gson.fromJson(reader, CouponContainer.class);
 			ArrayList<Button> views = new ArrayList<Button>();
 			GridLayout grid = (GridLayout) findViewById(R.id.grid);
 			for (final Coupon coupon: container.coupon) {
