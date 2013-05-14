@@ -16,12 +16,7 @@ public class MappingsArrayTest extends InstrumentationTestCase
 	private Context mockContext;
 	private Context appContext;
 	private MappingsArray mappings;
-	
-	public MappingsArrayTest()
-	{
 
-	}
-	
 	public void testArrayLoadedCorrectly()
 	{
 		mockContext = getInstrumentation().getContext();
@@ -57,23 +52,9 @@ public class MappingsArrayTest extends InstrumentationTestCase
 
 		Merchant first = merchants[0];
 		Merchant last = merchants[merchants.length - 1];
+		
 		assert(first.name == "00 - Cymax Stores Global Access" && first.id == 185495);
 		assert(last.name == "zZounds" && last.id == 18022);
-	}
-	
-	/* TODO: Code smell. Do not rely on ordering of unit tests.  */
-	public void testMerchantSearchMin()
-	{
-		assert(mappings.getMerchantId("00 - Cymax Stores Global Access") == 185495);
-	}
-	
-	public void testMerchantSearchMid()
-	{
 		assert(mappings.getMerchantId("GameStop.com") == 23984);
-	}
-	
-	public void testMerchantSearchMax()
-	{
-		assert(mappings.getMerchantId("zZounds") == 18022);
 	}
 }

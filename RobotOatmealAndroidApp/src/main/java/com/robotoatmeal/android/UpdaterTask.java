@@ -22,16 +22,19 @@ public class UpdaterTask extends TimerTask
 {
 	private final static String MAPPINGS_URI = "http://www.robotoatmeal.com/static/js/ro-merchant-names.js";
 	private final static String MAPPINGS_FILE_NAME = "ro-merchant-names.js";
-	private final static String UPDATEKEY = "UpdateInfo";
+	private final static String PREF_KEY = "UpdateInfo";
+	private final static String LAST_UPDATED_KEY = "lastUpdated";
 	private RestTemplate m_httpClient;
-	private Context m_context;
 	private IMappings m_mappings;
+	private Context m_context;
+	private SharedPreferences m_updateInfo;
 	
 	public UpdaterTask(Context appContext, IMappings mappings)
 	{
 		m_context = appContext;
 		m_httpClient = new RestTemplate();
 		m_mappings = mappings;
+		m_updateInfo = m_context.getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);
 	}
 	
 	@Override
@@ -40,26 +43,38 @@ public class UpdaterTask extends TimerTask
 		checkForUpdates();
 	}
 	
-	public boolean checkForUpdates()
+	public void checkForUpdates()
 	{
 		/* load the existing mappings file if it exists */
-		File mappingsFile = new File(m_context.getFilesDir().getAbsolutePath() + 
-				MAPPINGS_FILE_NAME);
+		File mappingsFile = getMappingsFile();
 		
 		if(mappingsFile.exists())
 			m_mappings.load(mappingsFile);
 		
-		SharedPreferences preferences = m_context.getSharedPreferences(UPDATEKEY, Context.MODE_PRIVATE);
-		
 		/* setting default to 0 forces us to get the latest mappings,
 		 * since this is the first time we are doing it */
-		long lastUpdateDate = preferences.getLong("lastUpdated", 0);
+		long lastUpdateDate = m_updateInfo.getLong(LAST_UPDATED_KEY, 0);
+		String mappingsData = getMappingsData(lastUpdateDate);
+		
+		if(mappingsData == "")
+			return;
+		
+		updateMappingsFile(mappingsData);
+	}
 	
+	private File getMappingsFile()
+	{
+		return new File(m_context.getFilesDir().getAbsolutePath() + 
+				MAPPINGS_FILE_NAME);
+	}
+	
+	private String getMappingsData(long lastUpdateDate)
+	{
 		HttpHeaders requestHeaders = new HttpHeaders();
 		requestHeaders.setIfModifiedSince(lastUpdateDate);
 		requestHeaders.setAcceptEncoding(ContentCodingType.GZIP);
 		
-		/* de-compress GZIP output */
+		/* Uncompress GZIP output */
 		m_httpClient.getMessageConverters().add(new StringHttpMessageConverter());
 		
 		ResponseEntity<String> response = m_httpClient.exchange(MAPPINGS_URI,
@@ -70,19 +85,17 @@ public class UpdaterTask extends TimerTask
 		/* was it updated? */
 		if(response.getStatusCode() == HttpStatus.NOT_MODIFIED)
 		{
-			return false;
+			return "";
 		}
-		
-		String mappingsData = response.getBody();
-		updateMappingsFile(mappingsData);
-		
-		return true;
+		else
+		{
+			return response.getBody();
+		}
 	}
 	
 	private void updateMappingsFile(String mappingsData)
 	{
-		File mappingsFile = new File(m_context.getFilesDir().getAbsolutePath() + 
-				MAPPINGS_FILE_NAME);
+		File mappingsFile = getMappingsFile();
 		
 		try
 		{
@@ -98,8 +111,7 @@ public class UpdaterTask extends TimerTask
 		m_mappings.load(mappingsFile);
 		
 		/*  update the update time */
-		SharedPreferences preferences = m_context.getSharedPreferences(UPDATEKEY, Context.MODE_PRIVATE);
 		Date date = new Date();
-		preferences.edit().putLong("lastUpdated", date.getTime());
+		m_updateInfo.edit().putLong(LAST_UPDATED_KEY, date.getTime());
 	}
 }
