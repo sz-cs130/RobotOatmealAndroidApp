@@ -6,9 +6,11 @@ import java.io.InputStream;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
@@ -27,7 +29,7 @@ public class MainActivity
 	static final String COUPON_DETAIL = "couponDetail";
 	
 	@ViewById
-	EditText searchBar;
+	AutoCompleteTextView searchBar;
 /*
     @RestService
     RestClient restClient;
@@ -42,6 +44,12 @@ public class MainActivity
         //restClient.main();
         doSomethingElseOnUiThread();
     }
+    
+	@Override
+	protected void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		
+	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
