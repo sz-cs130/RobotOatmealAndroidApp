@@ -10,6 +10,7 @@ import com.robotoatmeal.android.Merchant;
 import com.robotoatmeal.android.UpdaterTask;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.test.InstrumentationTestCase;
 
 public class UpdaterTest extends InstrumentationTestCase
@@ -93,6 +94,22 @@ public class UpdaterTest extends InstrumentationTestCase
 		String newMappings = readFile(getMappingsFile());
 		
 		assert(oldMappings == newMappings);
+	}
+	
+	public void testPreferencesUpdated()
+	{
+		appContext = getInstrumentation().getTargetContext();
+		mappings = new MappingsArray();
+		
+		SharedPreferences prefs = appContext.getSharedPreferences("UpdateInfo", Context.MODE_PRIVATE);
+		long oldTime = prefs.getLong("lastUpdated", 0);
+		
+		updater = new UpdaterTask(appContext, mappings);
+		updater.checkForUpdates();
+		
+		long newTime = prefs.getLong("lastUpdated", 0);
+		
+		assert(newTime > oldTime);
 	}
 	
 }
