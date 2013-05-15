@@ -1,7 +1,6 @@
 package com.robotoatmeal.android;
 
 import java.io.StringReader;
-import java.util.ArrayList;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -13,9 +12,10 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.GridLayout;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -44,27 +44,24 @@ public class SearchResultsActivity extends Activity {
 			reader.setLenient(true);
 			
 			CouponContainer container = gson.fromJson(reader, CouponContainer.class);
-			ArrayList<Button> views = new ArrayList<Button>();
-			GridLayout grid = (GridLayout) findViewById(R.id.grid);
-			for (final Coupon coupon: container.coupon) {
-				Button couponButton = new Button(this);
-				couponButton.setOnClickListener(new OnClickListener() {
+			GridView grid = (GridView) findViewById(R.id.grid);
+			ArrayAdapter<Coupon> adapter = new ArrayAdapter<Coupon>(this, 
+					android.R.layout.simple_list_item_1, container.coupon);
+			grid.setAdapter(adapter);
+			grid.setOnItemClickListener(new OnItemClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
-						Gson gson = new Gson();
-						String couponDetail = gson.toJson(coupon, Coupon.class);
-						intent.putExtra(MainActivity.COUPON_DETAIL, couponDetail);
-						startActivity(intent);
-					}
-					
-				});
+				@Override
+				public void onItemClick(AdapterView<?> parent, View v,
+						int position, long id) {	
+					Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
+					Gson gson = new Gson();
+					Coupon coupon = (Coupon) parent.getItemAtPosition(position);
+					String couponDetail = gson.toJson(coupon, Coupon.class);
+					intent.putExtra(MainActivity.COUPON_DETAIL, couponDetail);
+					startActivity(intent);
+				}
 				
-				views.add(couponButton);
-				views.get(views.size()-1).setText(coupon.couponCode);
-				grid.addView(views.get(views.size()-1));
-			}
+			});
 		}
 	}
 
