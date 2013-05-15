@@ -53,10 +53,11 @@ public class SearchResultsActivity extends Activity {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View v,
 						int position, long id) {	
-					Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
 					Gson gson = new Gson();
 					Coupon coupon = (Coupon) parent.getItemAtPosition(position);
 					String couponDetail = gson.toJson(coupon, Coupon.class);
+					
+					Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
 					intent.putExtra(MainActivity.COUPON_DETAIL, couponDetail);
 					startActivity(intent);
 				}
@@ -69,20 +70,9 @@ public class SearchResultsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Intent intent = getIntent();
-		search = intent.getStringExtra(MainActivity.SEARCH);
-		results = intent.getStringExtra(MainActivity.RESULTS);
-		if (search == null || results == null) {
-			SharedPreferences queries = getSharedPreferences("queries", 0);
-			search = queries.getString(MainActivity.SEARCH, null);
-			results = queries.getString(MainActivity.RESULTS, null);
-		} else {
-			SharedPreferences queries = getSharedPreferences("queries", 0);
-			SharedPreferences.Editor editor = queries.edit();
-			editor.putString(MainActivity.SEARCH, search);
-			editor.putString(MainActivity.RESULTS, results);
-			editor.commit();
-		}
+		SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.GLOBAL, MODE_PRIVATE);
+		search = sharedPreferences.getString(MainActivity.SEARCH, null);
+		results = sharedPreferences.getString(MainActivity.RESULTS, null);
 		
 		setContentView(R.layout.activity_search_results);
 		// Show the Up button in the action bar.

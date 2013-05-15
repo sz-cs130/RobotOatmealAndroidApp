@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.robotoatmeal.android.rest.RestClient;
 public class MainActivity
     extends Activity
 {
+	static final String GLOBAL = "global";
 	static final String SEARCH = "search";
 	static final String RESULTS = "results";
 	static final String COUPON_DETAIL = "couponDetail";
@@ -50,9 +52,12 @@ public class MainActivity
     
     @Click(R.id.searchButton) 
     void searchButtonClicked(View view) {
-    	Intent intent = new Intent(this, SearchResultsActivity_.class);
+		SharedPreferences sharedPreferences = getSharedPreferences(GLOBAL, MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		
     	String search = searchBar.getText().toString();
-    	intent.putExtra(SEARCH, search);
+		editor.putString(SEARCH, search);
+		
     	/* TEST CODE */
     	InputStream is = getResources().openRawResource(R.raw.test);
     	StringBuffer fileContent = new StringBuffer("");
@@ -68,7 +73,10 @@ public class MainActivity
 		}
     	String results = fileContent.toString();
     	/* END TEST CODE*/
-    	intent.putExtra(RESULTS, results);
+		editor.putString(RESULTS, results);
+		editor.commit();
+
+    	Intent intent = new Intent(this, SearchResultsActivity_.class);
     	startActivity(intent);
     }
 
