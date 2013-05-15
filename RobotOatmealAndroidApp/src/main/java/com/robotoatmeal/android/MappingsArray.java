@@ -19,15 +19,17 @@ public class MappingsArray implements IMappings
 	
 	public void load(File mappingsFile)
 	{
-		StringBuffer mappingsBuffer = new StringBuffer("");
+		StringBuilder mappingsBuffer = new StringBuilder("");
 		try
 		{
 			InputStream is = new FileInputStream(mappingsFile);
 			
 	    	byte[] buffer = new byte[8096];
+	    	
+	    	int bytesRead = 0;
 			
-			while (is.read(buffer) != -1) {
-				mappingsBuffer.append(new String(buffer));
+			while ((bytesRead = is.read(buffer)) != -1) {
+				mappingsBuffer.append(new String(buffer,0,bytesRead));
 			}
 			
 			is.close();

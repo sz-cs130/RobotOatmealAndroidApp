@@ -9,4 +9,10 @@ public class Merchant implements Comparable<Merchant>
 	{
 		return this.name.compareTo(other.name);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return this.name;
+	}
 }

@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import org.springframework.http.ContentCodingType;
@@ -16,7 +15,9 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.content.LocalBroadcastManager;
 
 public class UpdaterTask extends TimerTask
 {
@@ -27,13 +28,16 @@ public class UpdaterTask extends TimerTask
 	private RestTemplate m_httpClient;
 	private IMappings m_mappings;
 	private Context m_context;
+	private LocalBroadcastManager m_broadcastManager;
 	private SharedPreferences m_updateInfo;
 	
-	public UpdaterTask(Context appContext, IMappings mappings)
+	public UpdaterTask(Context appContext, IMappings mappings, 
+			LocalBroadcastManager broadcastManager)
 	{
 		m_context = appContext;
 		m_httpClient = new RestTemplate();
 		m_mappings = mappings;
+		m_broadcastManager = broadcastManager;
 		m_updateInfo = m_context.getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);
 	}
 	
@@ -113,5 +117,13 @@ public class UpdaterTask extends TimerTask
 		/*  update the update time */
 		Date date = new Date();
 		m_updateInfo.edit().putLong(LAST_UPDATED_KEY, date.getTime());
+		
+		broadcastMappingsUpdated();
+	}
+	
+	public void broadcastMappingsUpdated()
+	{
+	    Intent broadcastIntent = new Intent("MappingsUpdated");
+	    m_broadcastManager.sendBroadcast(broadcastIntent);
 	}
 }

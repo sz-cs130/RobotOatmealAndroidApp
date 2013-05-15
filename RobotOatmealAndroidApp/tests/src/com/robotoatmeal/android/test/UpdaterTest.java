@@ -11,6 +11,7 @@ import com.robotoatmeal.android.UpdaterTask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v4.content.LocalBroadcastManager;
 import android.test.InstrumentationTestCase;
 
 public class UpdaterTest extends InstrumentationTestCase
@@ -68,7 +69,9 @@ public class UpdaterTest extends InstrumentationTestCase
 		File mappingsFile = getMappingsFile();
 		mappingsFile.delete();
 		
-		updater = new UpdaterTask(appContext, mappings);
+		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(appContext);
+		
+		updater = new UpdaterTask(appContext, mappings, manager);
 		updater.checkForUpdates();
 		
 		/* are mappings correctly loaded? */
@@ -83,8 +86,9 @@ public class UpdaterTest extends InstrumentationTestCase
 	{
 		appContext = getInstrumentation().getTargetContext();
 		mappings = new MappingsArray();
+		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(appContext);
 		
-		updater = new UpdaterTask(appContext, mappings);
+		updater = new UpdaterTask(appContext, mappings, manager);
 		updater.checkForUpdates();
 		
 		String oldMappings = readFile(getMappingsFile());
@@ -104,7 +108,9 @@ public class UpdaterTest extends InstrumentationTestCase
 		SharedPreferences prefs = appContext.getSharedPreferences("UpdateInfo", Context.MODE_PRIVATE);
 		long oldTime = prefs.getLong("lastUpdated", 0);
 		
-		updater = new UpdaterTask(appContext, mappings);
+		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(appContext);
+		
+		updater = new UpdaterTask(appContext, mappings, manager);
 		updater.checkForUpdates();
 		
 		long newTime = prefs.getLong("lastUpdated", 0);
