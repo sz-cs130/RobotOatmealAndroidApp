@@ -78,8 +78,12 @@ public class UpdaterTest extends InstrumentationTestCase
 		Merchant[] merchants = mappings.getMerchants();
 		Merchant first = merchants[0];
 		Merchant last = merchants[merchants.length - 1];
-		assert(first.name == "00 - Cymax Stores Global Access" && first.id == 185495);
-		assert(last.name == "zZounds" && last.id == 18022);
+		
+		assertEquals(first.name, "00 - Cymax Stores Global Access");
+		assertEquals(first.id, 185495);
+		
+		assertEquals(last.name,"zZounds");
+		assertEquals(last.id,18022);
 	}
 	
 	public void testUpdateWithoutNewUpdates()

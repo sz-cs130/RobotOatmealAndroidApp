@@ -29,7 +29,6 @@ public class CouponDetailActivity extends Activity {
 	@AfterViews
 	void updateText() {
 		description.setText(coupon.description);
-		merchantId.setText("" + coupon.merchantId);
 		couponCode.setText(coupon.couponCode);
 	}
 

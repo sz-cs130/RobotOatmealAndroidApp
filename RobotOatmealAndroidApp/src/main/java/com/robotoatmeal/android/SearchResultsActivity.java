@@ -1,11 +1,8 @@
 package com.robotoatmeal.android;
 
-import java.io.StringReader;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -19,7 +16,6 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -29,38 +25,40 @@ public class SearchResultsActivity extends Activity {
 	
 	@ViewById
 	TextView message;
+	
 	private String search;
-	private String results;
+	private CouponContainer couponContainer;
 
 	@AfterViews
 	void updateViews() {
-		if (search == null || results == null)
+		if (search == null || couponContainer.totalResults == 0)
+		{
 			message.setText("Oops, we can't find any coupons for " + search);
-		else {
+		}
+		else
+		{
 			message.setText("Search results for" + search);
 			
-			Gson gson = new Gson();
-			JsonReader reader = new JsonReader(new StringReader(results));
-			reader.setLenient(true);
-			
-			CouponContainer container = gson.fromJson(reader, CouponContainer.class);
 			GridView grid = (GridView) findViewById(R.id.grid);
-			ArrayAdapter<Coupon> adapter = new ArrayAdapter<Coupon>(this, 
-					android.R.layout.simple_list_item_1, container.coupon);
+			
+			ArrayAdapter<Coupon> adapter = new ArrayAdapter<Coupon>(this,
+					android.R.layout.simple_list_item_1, couponContainer.coupon);
+			
 			grid.setAdapter(adapter);
 			grid.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> parent, View v,
-						int position, long id) {	
-					Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
+						int position, long id) 
+				{	
 					Gson gson = new Gson();
 					Coupon coupon = (Coupon) parent.getItemAtPosition(position);
 					String couponDetail = gson.toJson(coupon, Coupon.class);
+		
+					Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
 					intent.putExtra(MainActivity.COUPON_DETAIL, couponDetail);
 					startActivity(intent);
 				}
-				
 			});
 		}
 	}
@@ -71,18 +69,7 @@ public class SearchResultsActivity extends Activity {
 		
 		Intent intent = getIntent();
 		search = intent.getStringExtra(MainActivity.SEARCH);
-		results = intent.getStringExtra(MainActivity.RESULTS);
-		if (search == null || results == null) {
-			SharedPreferences queries = getSharedPreferences("queries", 0);
-			search = queries.getString(MainActivity.SEARCH, null);
-			results = queries.getString(MainActivity.RESULTS, null);
-		} else {
-			SharedPreferences queries = getSharedPreferences("queries", 0);
-			SharedPreferences.Editor editor = queries.edit();
-			editor.putString(MainActivity.SEARCH, search);
-			editor.putString(MainActivity.RESULTS, results);
-			editor.commit();
-		}
+		couponContainer = (CouponContainer) intent.getParcelableExtra(MainActivity.RESULTS);
 		
 		setContentView(R.layout.activity_search_results);
 		// Show the Up button in the action bar.

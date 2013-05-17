@@ -55,16 +55,16 @@ public class MappingsArray implements IMappings
 	
 	public int getMerchantId(String name)
 	{
-		String key = name;
+		String key = name.toLowerCase();
 		int lo = 0;
 		int hi = m_merchants.length - 1;
 		int result = 0;
 		
 		while(lo <= hi)
 		{
-			int mid = lo + (lo + hi) / 2;
+			int mid = lo + (hi - lo) / 2;
 			
-			result = key.compareTo(m_merchants[mid].name);
+			result = key.compareTo(m_merchants[mid].name.toLowerCase());
 			
 			if(result == 0)
 			{

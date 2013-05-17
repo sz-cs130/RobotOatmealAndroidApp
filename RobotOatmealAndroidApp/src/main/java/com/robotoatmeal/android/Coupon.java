@@ -1,11 +1,10 @@
 package com.robotoatmeal.android;
 
-class Coupon {
-	
-	String description;
-	int merchantId;
+class Coupon 
+{
 	String couponCode;
-	int couponUsagesCount;
+	String description;
+	int couponUsageCount;
 	String expirationDate;
 	String lastUsedDate;
 	

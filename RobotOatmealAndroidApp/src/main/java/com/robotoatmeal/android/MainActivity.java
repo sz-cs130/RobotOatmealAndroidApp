@@ -141,17 +141,18 @@ public class MainActivity
     	Intent intent = new Intent(this, SearchResultsActivity_.class);
     	String search = searchBar.getText().toString();
     	
-    	int merchantid = m_mappings.getMerchantId(search);
+    	int merchantId = m_mappings.getMerchantId(search);
     	
-    	if(merchantid == -1)
+    	if(merchantId == -1)
     	{
     		/* not found */
+    		System.out.println("Id not found");
     	}
     	
+    	intent.putExtra("merchantId", merchantId);
     	intent.putExtra(SEARCH, search);
-    	
-    	/* intent.putExtra(RESULTS, results); */
-    	startActivity(intent);
+
+		new MerchantSearchTask(this).execute(intent);
     }
 
 }
