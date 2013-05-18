@@ -2,7 +2,7 @@ package com.robotoatmeal.android;
 
 import java.util.List;
 
-public class Container {
+public class CouponContainer {
 	
 	List<Coupon> coupon;
 	String metaInfo;

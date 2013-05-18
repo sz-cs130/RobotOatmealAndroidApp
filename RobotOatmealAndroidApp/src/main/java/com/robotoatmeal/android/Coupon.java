@@ -9,4 +9,8 @@ class Coupon {
 	String expirationDate;
 	String lastUsedDate;
 	
+	@Override
+	public String toString() {
+		return couponCode;
+	}
 }
