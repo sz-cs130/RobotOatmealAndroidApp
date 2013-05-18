@@ -42,7 +42,7 @@ public class SearchResultsActivity extends Activity {
 			GridView grid = (GridView) findViewById(R.id.grid);
 			
 			ArrayAdapter<Coupon> adapter = new ArrayAdapter<Coupon>(this,
-					android.R.layout.simple_list_item_1, couponContainer.coupon);
+					android.R.layout.simple_list_item_1, couponContainer.coupons);
 			
 			grid.setAdapter(adapter);
 			grid.setOnItemClickListener(new OnItemClickListener() {

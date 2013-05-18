@@ -1,5 +1,6 @@
 package com.robotoatmeal.android;
 
+import java.util.ArrayList;
 import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,9 +8,27 @@ import android.os.Parcelable;
 public class CouponContainer implements Parcelable
 {
 	int merchantId;
-	List<Coupon> couponType;
+	List<Coupon> coupons = new ArrayList<Coupon>();
 	int includedResults;
 	int totalResults;
+	
+    public CouponContainer(Parcel in) 
+    {
+    	merchantId = in.readInt();
+    	System.out.println("Coupon Container's merchantId: " + merchantId);
+        in.readTypedList(coupons, Coupon.CREATOR);
+        includedResults = in.readInt();
+        totalResults = in.readInt();   
+    }
+
+	public CouponContainer(int id, List<Coupon> couponlist,
+			int included, int total) 
+	{
+		merchantId = id;
+		coupons = couponlist;
+		includedResults = included;
+		totalResults = total;
+	}
 	
 	@Override
 	public int describeContents() {
@@ -19,7 +38,7 @@ public class CouponContainer implements Parcelable
 	@Override
      public void writeToParcel(Parcel out, int flags) {
 		 out.writeInt(merchantId);
-         out.writeList(couponType);
+         out.writeTypedList(coupons);
          out.writeInt(includedResults);
          out.writeInt(totalResults);
      }
@@ -34,12 +53,4 @@ public class CouponContainer implements Parcelable
              return new CouponContainer[size];
          }
      };
-     
-     private CouponContainer(Parcel in) 
-     {
-    	 merchantId = in.readInt();
-         in.readList(couponType, null);
-         includedResults = in.readInt();
-         totalResults = in.readInt();   
-     }
 }

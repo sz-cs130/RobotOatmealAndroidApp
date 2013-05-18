@@ -1,7 +1,5 @@
 package com.robotoatmeal.android;
 
-import java.io.StringReader;
-
 import org.springframework.http.ContentCodingType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +14,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
+import com.google.gson.GsonBuilder;
 
 public class MerchantSearchTask extends AsyncTask<Intent, Void, CouponContainer>
 {
@@ -35,7 +33,7 @@ public class MerchantSearchTask extends AsyncTask<Intent, Void, CouponContainer>
 	
 	public MerchantSearchTask(Context context)
 	{
-		context = m_context;
+		m_context = context;
 	}
 
 	@Override
@@ -62,13 +60,14 @@ public class MerchantSearchTask extends AsyncTask<Intent, Void, CouponContainer>
 		
 		String jsonResults = response.getBody();
 		
-		Gson gson = new Gson();
-		JsonReader reader = new JsonReader(new StringReader(jsonResults));
-		reader.setLenient(true);
+		Gson gson = new GsonBuilder()
+		.registerTypeAdapter(CouponContainer.class, 
+				new CouponResponseDeserializer())
+		.create();
 		
-		CouponContainerWrapper wrapper = gson.fromJson(reader, CouponContainerWrapper.class);
+		CouponContainer container = gson.fromJson(jsonResults, CouponContainer.class);
 		
-		return wrapper.coupons;
+		return container;
 	}
 	
 	@Override
