@@ -146,13 +146,20 @@ public class MainActivity
     	if(merchantId == -1)
     	{
     		/* not found */
-    		System.out.println("Id not found");
+    		System.out.println("[MainActivity] Id not found.");
+    		
+    		CouponContainer empty = null;
+    		intent.putExtra(RESULTS, empty);
+    		this.startActivity(intent);
+    	}
+    	else
+    	{
+        	intent.putExtra("merchantId", merchantId);
+        	intent.putExtra(SEARCH, search);
+
+    		new MerchantSearchTask(this).execute(intent);	
     	}
     	
-    	intent.putExtra("merchantId", merchantId);
-    	intent.putExtra(SEARCH, search);
-
-		new MerchantSearchTask(this).execute(intent);
     }
 
 }

@@ -27,53 +27,112 @@ public class SearchResultsActivity extends Activity {
 	TextView message;
 	
 	private String search;
-	private CouponContainer couponContainer;
-
-	@AfterViews
-	void updateViews() {
-		if (search == null || couponContainer.totalResults == 0)
-		{
-			message.setText("Oops, we can't find any coupons for " + search);
-		}
-		else
-		{
-			message.setText("Search results for" + search);
-			
-			GridView grid = (GridView) findViewById(R.id.grid);
-			
-			ArrayAdapter<Coupon> adapter = new ArrayAdapter<Coupon>(this,
-					android.R.layout.simple_list_item_1, couponContainer.coupons);
-			
-			grid.setAdapter(adapter);
-			grid.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View v,
-						int position, long id) 
-				{	
-					Gson gson = new Gson();
-					Coupon coupon = (Coupon) parent.getItemAtPosition(position);
-					String couponDetail = gson.toJson(coupon, Coupon.class);
-		
-					Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
-					intent.putExtra(MainActivity.COUPON_DETAIL, couponDetail);
-					startActivity(intent);
-				}
-			});
-		}
-	}
-
+	private CouponContainer results;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		Intent intent = getIntent();
 		search = intent.getStringExtra(MainActivity.SEARCH);
-		couponContainer = (CouponContainer) intent.getParcelableExtra(MainActivity.RESULTS);
+		results = (CouponContainer) intent.getParcelableExtra(MainActivity.RESULTS);
 		
+		/* activities are always destroyed in the 
+		 * emulator after you start a new activity...
+		 * so let's just get the saved state each time 
+		 * */
+		getSavedSearchResults();
+		
+		/* TODO: This is called multiple times for no reason.
+		 * Primarily an Android Annotations issue.
+		 * */
 		setContentView(R.layout.activity_search_results);
+		
 		// Show the Up button in the action bar.
 		setupActionBar();
+	}
+	
+	private void getSavedSearchResults()
+	{
+		RobotOatmeal appState = (RobotOatmeal) getApplicationContext();
+		
+		if(search == null || results == null)
+		{
+			results = appState.savedSearchResults;
+			search = appState.savedSearchQuery;
+		}
+	}
+	
+	private void setSavedSearchResults()
+	{
+		RobotOatmeal appState = (RobotOatmeal) getApplicationContext();
+		appState.savedSearchResults = results;
+		appState.savedSearchQuery = search;
+	}
+	
+	/* Can persist data, but only if this Activity is not destroyed. */
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		setSavedSearchResults();
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		getSavedSearchResults();
+	}
+	
+	/* Cannot persist data. Can only temporarily persist UI elements.
+	 * Completely useless if OS destroys the activity when starting
+	 * another.  */
+	@Override
+	protected void onSaveInstanceState (Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		
+	}
+
+	@AfterViews
+	void validateResults()
+	{
+		if(results == null)
+		{
+			message.setText("Oops, we can't find any coupons for " + search);
+		}
+		else
+		{
+			displaySearchResults();
+		}
+	}
+	
+	void displaySearchResults()
+	{
+		message.setText("Search results for" + search);
+		
+		GridView grid = (GridView) findViewById(R.id.grid);
+		
+		ArrayAdapter<Coupon> adapter = new ArrayAdapter<Coupon>(this,
+				android.R.layout.simple_list_item_1, results.coupons);
+		
+		grid.setAdapter(adapter);
+		grid.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) 
+			{	
+				Gson gson = new Gson();
+				Coupon coupon = (Coupon) parent.getItemAtPosition(position);
+				String couponDetail = gson.toJson(coupon, Coupon.class);
+	
+				Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
+				intent.putExtra(MainActivity.COUPON_DETAIL, couponDetail);
+				startActivity(intent);
+			}
+		});
 	}
 
 	/**
