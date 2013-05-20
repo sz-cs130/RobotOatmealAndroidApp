@@ -53,6 +53,8 @@ public class MerchantSearchTask extends AsyncTask<Intent, Void, CouponContainer>
 		String endpointUrl = BASE_URI + API_KEY + PUBLISHER_ID + 
 				FORMAT + "&merchantId=" + merchantId;
 		
+		System.out.println("Merchant ID for this search: " + merchantId);
+		
 		ResponseEntity<String> response = m_httpClient.exchange(endpointUrl,
 			HttpMethod.GET,
 			new HttpEntity<String>(requestHeaders),
@@ -64,6 +66,8 @@ public class MerchantSearchTask extends AsyncTask<Intent, Void, CouponContainer>
 		.registerTypeAdapter(CouponContainer.class, 
 				new CouponResponseDeserializer())
 		.create();
+		
+		System.out.println(jsonResults);
 		
 		CouponContainer container = gson.fromJson(jsonResults, CouponContainer.class);
 		

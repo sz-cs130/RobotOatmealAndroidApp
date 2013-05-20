@@ -53,7 +53,10 @@ public class UpdaterTask extends TimerTask
 		File mappingsFile = getMappingsFile();
 		
 		if(mappingsFile.exists())
+		{
 			m_mappings.load(mappingsFile);
+			broadcastMappingsLoaded();
+		}
 		
 		/* setting default to 0 forces us to get the latest mappings,
 		 * since this is the first time we are doing it */
@@ -118,12 +121,12 @@ public class UpdaterTask extends TimerTask
 		Date date = new Date();
 		m_updateInfo.edit().putLong(LAST_UPDATED_KEY, date.getTime());
 		
-		broadcastMappingsUpdated();
+		broadcastMappingsLoaded();
 	}
 	
-	public void broadcastMappingsUpdated()
+	public void broadcastMappingsLoaded()
 	{
-	    Intent broadcastIntent = new Intent("MappingsUpdated");
+	    Intent broadcastIntent = new Intent("MappingsLoaded");
 	    m_broadcastManager.sendBroadcast(broadcastIntent);
 	}
 }

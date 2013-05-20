@@ -56,7 +56,7 @@ public class SearchResultsActivity extends Activity {
 	{
 		RobotOatmeal appState = (RobotOatmeal) getApplicationContext();
 		
-		if(search == null || results == null)
+		if(results == null)
 		{
 			results = appState.savedSearchResults;
 			search = appState.savedSearchQuery;
@@ -98,7 +98,7 @@ public class SearchResultsActivity extends Activity {
 	@AfterViews
 	void validateResults()
 	{
-		if(results == null)
+		if(results == null || results.totalResults == 0)
 		{
 			message.setText("Oops, we can't find any coupons for " + search);
 		}

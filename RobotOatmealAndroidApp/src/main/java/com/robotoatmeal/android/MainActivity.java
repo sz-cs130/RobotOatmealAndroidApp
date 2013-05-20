@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
+import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -70,7 +71,7 @@ public class MainActivity
             @Override
             public void onReceive(Context context, Intent intent)
             {
-                if(intent.getAction().equals("MappingsUpdated"))
+                if(intent.getAction().equals("MappingsLoaded"))
                 {
                     m_mappings = m_service.getMappings();
                     Merchant[] merchants = m_mappings.getMerchants();
@@ -79,6 +80,7 @@ public class MainActivity
                             android.R.layout.simple_dropdown_item_1line, merchants);
                  
                     searchBar.setAdapter(adapter);
+                    searchBar.setEnabled(true);
                 } 
             }
         };
@@ -90,7 +92,7 @@ public class MainActivity
 		super.onResume();
 		
 		IntentFilter filter = new IntentFilter();
-	    filter.addAction("MappingsUpdated");
+	    filter.addAction("MappingsLoaded");
 	    m_localBroadcastManager.registerReceiver(m_broadcastReceiver, filter);
 	}
 	
