@@ -143,6 +143,11 @@ public class MainActivity
     	Intent intent = new Intent(this, SearchResultsActivity_.class);
     	String search = searchBar.getText().toString();
     	
+    	if(search == "" || search.replaceAll("\\s", "") == "")
+    	{
+    		return;
+    	}
+    	
     	int merchantId = m_mappings.getMerchantId(search);
     	
     	if(merchantId == -1)

@@ -26,12 +26,15 @@ public class SearchResultsActivity extends Activity {
 	@ViewById
 	TextView message;
 	
+	private RobotOatmeal m_appState;
 	private String search;
 	private CouponContainer results;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		m_appState = (RobotOatmeal) getApplicationContext();
 		
 		Intent intent = getIntent();
 		search = intent.getStringExtra(MainActivity.SEARCH);
@@ -54,20 +57,31 @@ public class SearchResultsActivity extends Activity {
 	
 	private void getSavedSearchResults()
 	{
-		RobotOatmeal appState = (RobotOatmeal) getApplicationContext();
-		
 		if(results == null)
 		{
-			results = appState.savedSearchResults;
-			search = appState.savedSearchQuery;
+			results = m_appState.savedSearchResults;
+			search = m_appState.savedSearchQuery;
 		}
 	}
 	
 	private void setSavedSearchResults()
 	{
-		RobotOatmeal appState = (RobotOatmeal) getApplicationContext();
-		appState.savedSearchResults = results;
-		appState.savedSearchQuery = search;
+		m_appState.savedSearchResults = results;
+		m_appState.savedSearchQuery = search;
+	}
+	
+	private void clearSavedSearchResults()
+	{
+		m_appState.savedSearchResults = null;
+		m_appState.savedSearchQuery = null;
+	}
+	
+	/* So future empty searches don't show the previous ones */
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		clearSavedSearchResults();
 	}
 	
 	/* Can persist data, but only if this Activity is not destroyed. */
@@ -92,7 +106,6 @@ public class SearchResultsActivity extends Activity {
 	protected void onSaveInstanceState (Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		
 	}
 
 	@AfterViews
