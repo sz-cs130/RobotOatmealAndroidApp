@@ -19,7 +19,8 @@
         <service android:name="CacheService" />
         <activity
             android:name="com.robotoatmeal.android.MainActivity_"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +30,8 @@
         <activity
             android:name="com.robotoatmeal.android.SearchResultsActivity_"
             android:label="@string/title_activity_search_results"
-            android:parentActivityName="com.robotoatmeal.android.MainActivity_" >
+            android:parentActivityName="com.robotoatmeal.android.MainActivity_" 
+            android:configChanges="orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.robotoatmeal.android.MainActivity_" />
@@ -37,7 +39,8 @@
         <activity
             android:name="com.robotoatmeal.android.CouponDetailActivity_"
             android:label="@string/title_activity_coupon_detail"
-            android:parentActivityName="com.robotoatmeal.android.SearchResultsActivity_" >
+            android:parentActivityName="com.robotoatmeal.android.SearchResultsActivity_"
+            android:configChanges="orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.robotoatmeal.android.SearchResultsActivity_" />

@@ -104,7 +104,11 @@ public class MainActivity
 	
 	/* Only starts after checkForUpdates has been run once. 
 	 * onStart() for activities and services both use the main
-	 * UI thread. */
+	 * UI thread.
+	 * 
+	 * Note: Make sure that Android does not destroy everything on 
+	 * screen rotate! Check the AndroidManifest.xml for this setting!
+	 * */
     @Override
     protected void onStart() {
         super.onStart();

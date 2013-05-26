@@ -132,7 +132,7 @@ public class SearchResultsActivity extends Activity {
 	
 	void displaySearchResults()
 	{
-		message.setText("Search results for" + search);
+		message.setText("Search results for " + search);
 		
 		GridView grid = (GridView) findViewById(R.id.grid);
 		
