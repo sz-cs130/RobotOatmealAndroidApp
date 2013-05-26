@@ -1,7 +1,10 @@
 package com.robotoatmeal.android;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.TimerTask;
 
@@ -57,6 +60,11 @@ public class UpdaterTask extends TimerTask
 			m_mappings.load(mappingsFile);
 			broadcastMappingsLoaded();
 		}
+		else
+		{
+			/* create it from the pre-loaded resource file */
+			preloadMappings();
+		}
 		
 		/* setting default to 0 forces us to get the latest mappings,
 		 * since this is the first time we are doing it */
@@ -67,6 +75,28 @@ public class UpdaterTask extends TimerTask
 			return;
 		
 		updateMappingsFile(mappingsData);
+	}
+	
+	void preloadMappings()
+	{
+		InputStream stream = m_context.getResources().openRawResource(R.raw.romerchantnames);
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		String line;
+		StringBuilder mappings = new StringBuilder();
+		
+		try {
+			
+			while ((line = reader.readLine()) != null)
+			{
+				mappings.append(line);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		updateMappingsFile(mappings.toString());
 	}
 	
 	private File getMappingsFile()
