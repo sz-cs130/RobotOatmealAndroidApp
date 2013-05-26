@@ -36,15 +36,7 @@ public class SearchResultsActivity extends Activity {
 		
 		m_appState = (RobotOatmeal) getApplicationContext();
 		
-		Intent intent = getIntent();
-		search = intent.getStringExtra(MainActivity.SEARCH);
-		results = (CouponContainer) intent.getParcelableExtra(MainActivity.RESULTS);
-		
-		/* activities are always destroyed in the 
-		 * emulator after you start a new activity...
-		 * so let's just get the saved state each time 
-		 * */
-		getSavedSearchResults();
+		loadSearchResults();
 		
 		/* TODO: This is called multiple times for no reason.
 		 * Primarily an Android Annotations issue.
@@ -55,33 +47,50 @@ public class SearchResultsActivity extends Activity {
 		setupActionBar();
 	}
 	
+	private void loadSearchResults()
+	{
+		Intent intent = getIntent();
+		search = intent.getStringExtra(MainActivity.SEARCH);
+		results = (CouponContainer) intent.getParcelableExtra(MainActivity.RESULTS);
+
+		if(results == null)
+		{
+			getSavedSearchResults();
+		}
+		else
+		{
+			setSavedSearchResults();
+		}
+	}
+	
+	/* ALWAYS check if results is null. Could be destroyed at any moment. */
+	private void setSavedSearchResults()
+	{
+		if(results != null)
+		{
+			m_appState.savedSearch.query = search;
+			m_appState.savedSearch.results = results;
+		}
+	}
+	
 	private void getSavedSearchResults()
 	{
 		if(results == null)
 		{
-			results = m_appState.savedSearchResults;
-			search = m_appState.savedSearchQuery;
+			search = m_appState.savedSearch.query;
+			results = m_appState.savedSearch.results;
 		}
 	}
 	
-	private void setSavedSearchResults()
-	{
-		m_appState.savedSearchResults = results;
-		m_appState.savedSearchQuery = search;
-	}
-	
-	private void clearSavedSearchResults()
-	{
-		m_appState.savedSearchResults = null;
-		m_appState.savedSearchQuery = null;
-	}
-	
-	/* So future empty searches don't show the previous ones */
+	/* Note: 
+	 * Real android phone always calls stop() when opening
+	 * a new activity.
+	 * DO NOT call clearSavedSearchResults() in this method.
+	 * So future empty searches don't show the previous ones */
 	@Override
 	protected void onStop()
 	{
 		super.onStop();
-		clearSavedSearchResults();
 	}
 	
 	/* Can persist data, but only if this Activity is not destroyed. */

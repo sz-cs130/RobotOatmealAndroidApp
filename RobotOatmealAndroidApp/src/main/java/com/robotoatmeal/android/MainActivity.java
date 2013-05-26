@@ -40,6 +40,8 @@ public class MainActivity
 	
 	IMappings m_mappings;
 	
+	private RobotOatmeal m_appState;
+	
 	private ServiceConnection m_connection = new ServiceConnection() {
 
 		@Override
@@ -64,6 +66,10 @@ public class MainActivity
 	@Override
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		
+		/* clear old search results */
+		m_appState = (RobotOatmeal) getApplicationContext();
+		m_appState.savedSearch.clearSearchResults();
 				
         m_localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
