@@ -5,20 +5,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.robotoatmeal.android.IMappings;
 import com.robotoatmeal.android.MappingsArray;
 import com.robotoatmeal.android.Merchant;
-import com.robotoatmeal.android.UpdaterTask;
+import com.robotoatmeal.android.MappingsUpdater;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v4.content.LocalBroadcastManager;
 import android.test.InstrumentationTestCase;
 
 public class UpdaterTest extends InstrumentationTestCase
 {
 	private Context appContext;
-	private UpdaterTask updater;
-	private MappingsArray mappings;
+	private MappingsUpdater updater;
+	private IMappings mappings;
 	
 	public File getMappingsFile()
 	{
@@ -69,9 +69,7 @@ public class UpdaterTest extends InstrumentationTestCase
 		File mappingsFile = getMappingsFile();
 		mappingsFile.delete();
 		
-		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(appContext);
-		
-		updater = new UpdaterTask(appContext, mappings, manager);
+		updater = new MappingsUpdater(appContext, mappings);
 		updater.checkForUpdates();
 		
 		/* are mappings correctly loaded? */
@@ -90,9 +88,8 @@ public class UpdaterTest extends InstrumentationTestCase
 	{
 		appContext = getInstrumentation().getTargetContext();
 		mappings = new MappingsArray();
-		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(appContext);
 		
-		updater = new UpdaterTask(appContext, mappings, manager);
+		updater = new MappingsUpdater(appContext, mappings);
 		updater.checkForUpdates();
 		
 		String oldMappings = readFile(getMappingsFile());
@@ -112,9 +109,7 @@ public class UpdaterTest extends InstrumentationTestCase
 		SharedPreferences prefs = appContext.getSharedPreferences("UpdateInfo", Context.MODE_PRIVATE);
 		long oldTime = prefs.getLong("lastUpdated", 0);
 		
-		LocalBroadcastManager manager = LocalBroadcastManager.getInstance(appContext);
-		
-		updater = new UpdaterTask(appContext, mappings, manager);
+		updater = new MappingsUpdater(appContext, mappings);
 		updater.checkForUpdates();
 		
 		long newTime = prefs.getLong("lastUpdated", 0);

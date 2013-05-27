@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:allowBackup="true" >
-        <service android:name="CacheService" />
+        <receiver android:name="com.robotoatmeal.android.MappingsUpdater" android:enabled="true"></receiver>
         <activity
             android:name="com.robotoatmeal.android.MainActivity_"
             android:label="@string/app_name" 

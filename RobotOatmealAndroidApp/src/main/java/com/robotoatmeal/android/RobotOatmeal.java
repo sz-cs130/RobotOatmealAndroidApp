@@ -4,6 +4,8 @@ import android.app.Application;
 
 public class RobotOatmeal extends Application
 {
+	public boolean tasksScheduled = false;
+	public IMappings mappings = new MappingsArray();
 	public Search savedSearch = new Search();
 	
 	public class Search

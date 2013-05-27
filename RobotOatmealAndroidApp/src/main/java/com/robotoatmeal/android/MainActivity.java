@@ -2,26 +2,26 @@
 package com.robotoatmeal.android;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
+import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
-import com.robotoatmeal.android.CacheService.CacheBinder;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity
@@ -30,35 +30,13 @@ public class MainActivity
 	static final String SEARCH = "search";
 	static final String RESULTS = "results";
 	static final String COUPON_DETAIL = "couponDetail";
-	
-	CacheService m_service;
-	boolean m_bound = false;
-	
-	BroadcastReceiver m_broadcastReceiver;
-	LocalBroadcastManager m_localBroadcastManager;
-	
-	IMappings m_mappings;
+	final static long TIMER_INTERVAL = 24*3600*1000;
 	
 	private RobotOatmeal m_appState;
+	BroadcastReceiver m_broadcastReceiver;
+	LocalBroadcastManager m_localBroadcastManager;
+	private IMappings m_mappings;
 	
-	private ServiceConnection m_connection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName className,
-		        IBinder service)
-		{
-			// We've bound to LocalService, cast the IBinder and get LocalService instance
-			CacheBinder binder = (CacheBinder) service;
-			m_service = binder.getService();
-			m_bound = true;
-		}
-
-	    @Override
-	    public void onServiceDisconnected(ComponentName arg0) {
-	        m_bound = false;
-	    }
-	};
-    
 	@ViewById
 	AutoCompleteTextView searchBar;
     
@@ -66,8 +44,9 @@ public class MainActivity
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-		/* clear old search results */
 		m_appState = (RobotOatmeal) getApplicationContext();
+		
+		/* clear old search results */
 		m_appState.savedSearch.clearSearchResults();
 				
         m_localBroadcastManager = LocalBroadcastManager.getInstance(this);
@@ -78,19 +57,36 @@ public class MainActivity
             {
                 if(intent.getAction().equals("MappingsLoaded"))
                 {
-                    m_mappings = m_service.getMappings();
-                    Merchant[] merchants = m_mappings.getMerchants();
-                    
-                    ArrayAdapter<Merchant> adapter = new ArrayAdapter<Merchant>(MainActivity.this,
-                            android.R.layout.simple_dropdown_item_1line, merchants);
-                 
-                    searchBar.setAdapter(adapter);
-                    searchBar.setEnabled(true);
+                	attachAutoComplete();
                 } 
             }
         };
+		
+		if(m_appState.tasksScheduled == false)
+		{
+			AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+			Intent intent = new Intent(this, MappingsUpdater.class);   
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,  intent, 0);
+			alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), TIMER_INTERVAL, pendingIntent);
+			
+			m_appState.tasksScheduled = true;
+		}
 	}
 	
+	/*
+	 * Note: Make sure that Android does not destroy everything on 
+	 * screen rotate! Check the AndroidManifest.xml for this setting!
+	 * */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        
+		if(m_appState.mappings.isLoaded())
+		{
+			attachAutoComplete();
+		}
+    }
+    
 	@Override
 	protected void onResume()
 	{
@@ -100,30 +96,10 @@ public class MainActivity
 	    filter.addAction("MappingsLoaded");
 	    m_localBroadcastManager.registerReceiver(m_broadcastReceiver, filter);
 	}
-	
-	/* Only starts after checkForUpdates has been run once. 
-	 * onStart() for activities and services both use the main
-	 * UI thread.
-	 * 
-	 * Note: Make sure that Android does not destroy everything on 
-	 * screen rotate! Check the AndroidManifest.xml for this setting!
-	 * */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        
-        Intent intent = new Intent(this, CacheService.class);
-        bindService(intent, m_connection, Context.BIND_AUTO_CREATE);
-    }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // Unbind from the service
-        if (m_bound) {
-            unbindService(m_connection);
-            m_bound = false;
-        }
     }
 
     @Override
@@ -140,10 +116,19 @@ public class MainActivity
     @Background
     void doSomethingInBackground() {
     	
-		Intent serviceIntent = new Intent(this, CacheService.class);
-		this.startService(serviceIntent);
-    	
         doSomethingElseOnUiThread();
+    }
+    
+    void attachAutoComplete()
+    {
+        m_mappings = m_appState.mappings;
+        Merchant[] merchants = m_mappings.getMerchants();
+        
+        ArrayAdapter<Merchant> adapter = new ArrayAdapter<Merchant>(MainActivity.this,
+                android.R.layout.simple_dropdown_item_1line, merchants);
+     
+        searchBar.setAdapter(adapter);
+        searchBar.setEnabled(true);
     }
     
     @Click(R.id.searchButton) 

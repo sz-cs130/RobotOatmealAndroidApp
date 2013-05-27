@@ -11,6 +11,12 @@ import com.google.gson.stream.JsonReader;
 public class MappingsArray implements IMappings
 {
 	private Merchant[] m_merchants;
+	private boolean m_loaded;
+	
+	public MappingsArray()
+	{
+		m_loaded = false;
+	}
 	
 	public Merchant[] getMerchants()
 	{
@@ -50,6 +56,8 @@ public class MappingsArray implements IMappings
 		JsonReader reader = new JsonReader(new StringReader(merchantArray));
 		m_merchants = gson.fromJson(reader, Merchant[].class);
 		
+		m_loaded = true;
+		
 		return;
 	}
 	
@@ -81,5 +89,10 @@ public class MappingsArray implements IMappings
 		}
 		
 		return -1;
+	}
+	
+	public boolean isLoaded()
+	{
+		return m_loaded;
 	}
 }

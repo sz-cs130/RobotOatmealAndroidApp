@@ -28,7 +28,7 @@ public class MerchantSearchTask extends AsyncTask<Intent, Void, CouponContainer>
 	
 	public MerchantSearchTask()
 	{
-		
+	
 	}
 	
 	public MerchantSearchTask(Context context)

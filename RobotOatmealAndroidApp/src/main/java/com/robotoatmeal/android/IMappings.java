@@ -6,4 +6,5 @@ public interface IMappings
 	public void load(File mappingsFile);
 	public Merchant[] getMerchants();
 	public int getMerchantId(String name);
+	public boolean isLoaded();
 }
