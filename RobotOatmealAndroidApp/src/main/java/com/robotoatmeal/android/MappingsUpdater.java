@@ -7,15 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 
-import org.springframework.http.ContentCodingType;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +15,6 @@ import android.support.v4.content.LocalBroadcastManager;
 
 public class MappingsUpdater extends BroadcastReceiver
 {
-	private final static String MAPPINGS_URI = "http://www.robotoatmeal.com/static/js/ro-merchant-names.js";
 	private final static String MAPPINGS_FILE_NAME = "ro-merchant-names.js";
 	private final static String PREF_KEY = "UpdateInfo";
 	private final static String LAST_UPDATED_KEY = "lastUpdated";
@@ -115,6 +105,9 @@ public class MappingsUpdater extends BroadcastReceiver
 	
 	public void updateMappingsFile(String mappingsData)
 	{
+		if(mappingsData == "")
+			return;
+		
 		File mappingsFile = getMappingsFile();
 		
 		try

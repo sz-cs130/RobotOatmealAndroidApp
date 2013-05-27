@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
-import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
@@ -67,7 +66,8 @@ public class MainActivity
 			AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
 			Intent intent = new Intent(this, MappingsUpdater.class);   
 			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,  intent, 0);
-			alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), TIMER_INTERVAL, pendingIntent);
+			alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 
+					SystemClock.elapsedRealtime(), TIMER_INTERVAL, pendingIntent);
 			
 			m_appState.tasksScheduled = true;
 		}

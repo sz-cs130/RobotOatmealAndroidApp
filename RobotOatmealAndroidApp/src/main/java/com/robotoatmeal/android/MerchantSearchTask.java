@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import android.content.Context;
@@ -55,23 +56,31 @@ public class MerchantSearchTask extends AsyncTask<Intent, Void, CouponContainer>
 		
 		System.out.println("Merchant ID for this search: " + merchantId);
 		
-		ResponseEntity<String> response = m_httpClient.exchange(endpointUrl,
-			HttpMethod.GET,
-			new HttpEntity<String>(requestHeaders),
-			String.class);
-		
-		String jsonResults = response.getBody();
-		
-		Gson gson = new GsonBuilder()
-		.registerTypeAdapter(CouponContainer.class, 
-				new CouponResponseDeserializer())
-		.create();
-		
-		System.out.println(jsonResults);
-		
-		CouponContainer container = gson.fromJson(jsonResults, CouponContainer.class);
-		
-		return container;
+		try {
+			ResponseEntity<String> response = m_httpClient.exchange(endpointUrl,
+				HttpMethod.GET,
+				new HttpEntity<String>(requestHeaders),
+				String.class);
+			
+			String jsonResults = response.getBody();
+			
+			Gson gson = new GsonBuilder()
+			.registerTypeAdapter(CouponContainer.class, 
+					new CouponResponseDeserializer())
+			.create();
+			
+			System.out.println(jsonResults);
+			
+			CouponContainer container = gson.fromJson(jsonResults, CouponContainer.class);
+			
+			return container;
+		}
+		catch(ResourceAccessException e){
+			e.printStackTrace();
+			
+			/* TODO: Inform user that the host is unreachable. */
+			return null;
+		}
 	}
 	
 	@Override

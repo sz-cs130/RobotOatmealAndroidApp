@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import android.os.AsyncTask;
@@ -40,19 +41,33 @@ public class DownloadMappingsTask extends AsyncTask<Long, Void, String>
 		/* Uncompress GZIP output */
 		client.getMessageConverters().add(new StringHttpMessageConverter());
 		
-		ResponseEntity<String> response = client.exchange(MAPPINGS_URI,
-			HttpMethod.GET,
-			new HttpEntity<String>(requestHeaders),
-			String.class);
-
-		/* was it updated? */
-		if(response.getStatusCode() == HttpStatus.NOT_MODIFIED)
+		try
 		{
-			return "";
+			ResponseEntity<String> response = client.exchange(MAPPINGS_URI,
+					HttpMethod.GET,
+					new HttpEntity<String>(requestHeaders),
+					String.class);
+			
+			HttpStatus statusCode = response.getStatusCode();
+			
+			/* was it updated? */
+			if(statusCode == HttpStatus.NOT_MODIFIED)
+			{
+				return "";
+			}
+			else if(statusCode == HttpStatus.BAD_REQUEST){
+				return "";
+			}
+			else
+			{
+				return response.getBody();
+			}
 		}
-		else
+		catch(ResourceAccessException e)
 		{
-			return response.getBody();
+			e.printStackTrace();
+			/* TODO: Inform user that the host is unreachable. */
+			return "";
 		}
 	}
 	
