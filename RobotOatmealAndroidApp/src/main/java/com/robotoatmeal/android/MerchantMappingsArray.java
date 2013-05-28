@@ -8,12 +8,12 @@ import java.io.StringReader;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-public class MappingsArray implements IMappings
+public class MerchantMappingsArray implements IMappings
 {
 	private Merchant[] m_merchants;
 	private boolean m_loaded;
 	
-	public MappingsArray()
+	public MerchantMappingsArray()
 	{
 		m_loaded = false;
 	}

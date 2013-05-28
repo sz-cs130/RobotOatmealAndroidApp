@@ -31,7 +31,7 @@ public class MainActivity
 	static final String COUPON_DETAIL = "couponDetail";
 	final static long TIMER_INTERVAL = 24*3600*1000;
 	
-	private RobotOatmeal m_appState;
+	private RobotOatmealState m_appState;
 	BroadcastReceiver m_broadcastReceiver;
 	LocalBroadcastManager m_localBroadcastManager;
 	private IMappings m_mappings;
@@ -43,7 +43,7 @@ public class MainActivity
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-		m_appState = (RobotOatmeal) getApplicationContext();
+		m_appState = (RobotOatmealState) getApplicationContext();
 		
 		/* clear old search results */
 		m_appState.savedSearch.clearSearchResults();
@@ -61,16 +61,7 @@ public class MainActivity
             }
         };
 		
-		if(m_appState.tasksScheduled == false)
-		{
-			AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
-			Intent intent = new Intent(this, MappingsUpdater.class);   
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,  intent, 0);
-			alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 
-					SystemClock.elapsedRealtime(), TIMER_INTERVAL, pendingIntent);
-			
-			m_appState.tasksScheduled = true;
-		}
+        startRecurringTasks();
 	}
 	
 	/*
@@ -117,6 +108,20 @@ public class MainActivity
     void doSomethingInBackground() {
     	
         doSomethingElseOnUiThread();
+    }
+    
+    void startRecurringTasks()
+    {
+		if(m_appState.tasksScheduled == false)
+		{
+			AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+			Intent intent = new Intent(this, MappingsUpdater.class);   
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,  intent, 0);
+			alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 
+					SystemClock.elapsedRealtime(), TIMER_INTERVAL, pendingIntent);
+			
+			m_appState.tasksScheduled = true;
+		}
     }
     
     void attachAutoComplete()

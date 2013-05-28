@@ -2,10 +2,10 @@ package com.robotoatmeal.android;
 
 import android.app.Application;
 
-public class RobotOatmeal extends Application
+public class RobotOatmealState extends Application
 {
 	public boolean tasksScheduled = false;
-	public IMappings mappings = new MappingsArray();
+	public IMappings mappings = new MerchantMappingsArray();
 	public Search savedSearch = new Search();
 	
 	public class Search

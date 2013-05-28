@@ -8,20 +8,20 @@ import java.io.InputStream;
 import android.content.Context;
 import android.test.InstrumentationTestCase;
 
-import com.robotoatmeal.android.MappingsArray;
+import com.robotoatmeal.android.MerchantMappingsArray;
 
 public class MappingsArrayTest extends InstrumentationTestCase 
 {
 	private Merchant[] merchants;
 	private Context mockContext;
 	private Context appContext;
-	private MappingsArray mappings;
+	private MerchantMappingsArray mappings;
 
 	public void testArrayLoadedCorrectly()
 	{
 		mockContext = getInstrumentation().getContext();
 		appContext = getInstrumentation().getTargetContext();
-		mappings = new MappingsArray();
+		mappings = new MerchantMappingsArray();
 
 		/* create the mappings file on the system */
 		File mappingsFile = new File(appContext.getFilesDir().getAbsolutePath() + "/ro-merchant-names.js");

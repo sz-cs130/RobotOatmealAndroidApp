@@ -22,7 +22,7 @@ public class MappingsUpdater extends BroadcastReceiver
 	private LocalBroadcastManager m_broadcastManager;
 	private SharedPreferences m_updateInfo;
 	private IMappings m_mappings;
-	private RobotOatmeal m_appState;
+	private RobotOatmealState m_appState;
 	
 	public MappingsUpdater()
 	{
@@ -44,7 +44,7 @@ public class MappingsUpdater extends BroadcastReceiver
 		m_context = context;
 		m_broadcastManager = LocalBroadcastManager.getInstance(m_context);
 		m_updateInfo = m_context.getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);
-		m_appState = (RobotOatmeal) m_context.getApplicationContext();
+		m_appState = (RobotOatmealState) m_context.getApplicationContext();
 		
 		/* modify the global mappings state */
 		m_mappings = m_appState.mappings;

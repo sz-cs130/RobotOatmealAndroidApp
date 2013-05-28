@@ -26,7 +26,7 @@ public class SearchResultsActivity extends Activity {
 	@ViewById
 	TextView message;
 	
-	private RobotOatmeal m_appState;
+	private RobotOatmealState m_appState;
 	private String search;
 	private CouponContainer results;
 	
@@ -34,7 +34,7 @@ public class SearchResultsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		m_appState = (RobotOatmeal) getApplicationContext();
+		m_appState = (RobotOatmealState) getApplicationContext();
 		
 		loadSearchResults();
 		

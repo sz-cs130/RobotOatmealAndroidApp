@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.robotoatmeal.android.IMappings;
-import com.robotoatmeal.android.MappingsArray;
+import com.robotoatmeal.android.MerchantMappingsArray;
 import com.robotoatmeal.android.Merchant;
 import com.robotoatmeal.android.MappingsUpdater;
 
@@ -64,7 +64,7 @@ public class UpdaterTest extends InstrumentationTestCase
 	public void testFirstMappingsUpdateSuccess()
 	{
 		appContext = getInstrumentation().getTargetContext();
-		mappings = new MappingsArray();
+		mappings = new MerchantMappingsArray();
 
 		File mappingsFile = getMappingsFile();
 		mappingsFile.delete();
@@ -87,7 +87,7 @@ public class UpdaterTest extends InstrumentationTestCase
 	public void testUpdateWithoutNewUpdates()
 	{
 		appContext = getInstrumentation().getTargetContext();
-		mappings = new MappingsArray();
+		mappings = new MerchantMappingsArray();
 		
 		updater = new MappingsUpdater(appContext, mappings);
 		updater.checkForUpdates();
@@ -104,7 +104,7 @@ public class UpdaterTest extends InstrumentationTestCase
 	public void testPreferencesUpdated()
 	{
 		appContext = getInstrumentation().getTargetContext();
-		mappings = new MappingsArray();
+		mappings = new MerchantMappingsArray();
 		
 		SharedPreferences prefs = appContext.getSharedPreferences("UpdateInfo", Context.MODE_PRIVATE);
 		long oldTime = prefs.getLong("lastUpdated", 0);
