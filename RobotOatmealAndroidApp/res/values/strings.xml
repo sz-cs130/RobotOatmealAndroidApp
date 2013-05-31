@@ -11,5 +11,7 @@
     <string name="merchantId">Merchant ID:</string>
     <string name="description">Description:</string>
     <string name="couponCode">Coupon Code:</string>
+    <string name="favorite">Favorite</string>
+    <string name="favorites">Favorites:</string>
 
 </resources>

@@ -2,7 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/LinearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
         <AutoCompleteTextView
             android:id="@+id/searchBar"
@@ -10,8 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:completionThreshold="1"
-            android:ems="10" 
-            android:enabled="false">
+            android:ems="10"
+            android:enabled="false" >
 
             <requestFocus />
         </AutoCompleteTextView>
@@ -22,4 +28,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/search" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/favorites" />
+
+    <ListView
+        android:id="@+id/favoriteList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
 </LinearLayout>

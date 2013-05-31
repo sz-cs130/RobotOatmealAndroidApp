@@ -174,7 +174,20 @@ public class SearchResultsActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.search_results, menu);
+		getMenuInflater().inflate(R.menu.favorite, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (merchantId != -1) {
+			MenuItem favorite_toggle = menu.findItem(R.id.favorite_toggle);
+			FavoriteOpenHelper favoriteOpenHelper = new FavoriteOpenHelper(this);
+			if (favoriteOpenHelper.isFavorite(merchantId))
+				favorite_toggle.setIcon(R.drawable.ic_launcher);
+			else
+				favorite_toggle.setIcon(R.drawable.ic_action_search);
+		}
 		return true;
 	}
 
@@ -190,6 +203,13 @@ public class SearchResultsActivity extends Activity {
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
 			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		case R.id.favorite_toggle:
+			if (merchantId != -1) {
+				FavoriteOpenHelper favoriteOpenHelper = new FavoriteOpenHelper(this);
+				favoriteOpenHelper.toggleFavorite(merchantId, merchantName);
+				invalidateOptionsMenu();
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
