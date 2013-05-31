@@ -16,12 +16,11 @@ import com.googlecode.androidannotations.annotations.ViewById;
 public class CouponDetailActivity extends Activity {
 	
 	Coupon coupon;
+	int merchantId;
+	String merchantName;
 	
 	@ViewById
 	TextView description;
-	
-	@ViewById
-	TextView merchantId;
 		
 	@ViewById
 	TextView couponCode;
@@ -36,6 +35,8 @@ public class CouponDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		merchantId = getIntent().getIntExtra(MainActivity.MERCHANT_ID, -1);
+		merchantName = getIntent().getStringExtra(MainActivity.MERCHANT_NAME);
 		String couponDetail = getIntent().getStringExtra(MainActivity.COUPON_DETAIL);
 		Gson gson = new Gson();
 		coupon = gson.fromJson(couponDetail, Coupon.class);

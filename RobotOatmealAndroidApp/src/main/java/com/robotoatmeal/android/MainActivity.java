@@ -26,7 +26,8 @@ import com.googlecode.androidannotations.annotations.ViewById;
 public class MainActivity
     extends Activity
 {
-	static final String SEARCH = "search";
+	static final String MERCHANT_ID = "id";
+	static final String MERCHANT_NAME = "name";
 	static final String RESULTS = "results";
 	static final String COUPON_DETAIL = "couponDetail";
 	final static long TIMER_INTERVAL = 24*3600*1000;
@@ -38,6 +39,36 @@ public class MainActivity
 	
 	@ViewById
 	AutoCompleteTextView searchBar;
+	
+	@ViewById
+	ListView favoriteList;
+	
+	@AfterViews
+	void displayFavoriteList() {
+        FavoriteOpenHelper favoriteOpenHelper = new FavoriteOpenHelper(this);
+        
+        ArrayAdapter<Merchant> adapter = new ArrayAdapter<Merchant>(
+        		this, android.R.layout.simple_list_item_1, 
+        		favoriteOpenHelper.getFavoriteMerchants());
+        favoriteList.setAdapter(adapter);
+        favoriteList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) 
+			{
+				Merchant merchant = (Merchant) parent.getItemAtPosition(position);
+	
+				Intent intent = new Intent(MainActivity.this, 
+						SearchResultsActivity_.class);
+	        	intent.putExtra(MERCHANT_ID, merchant.id);
+	        	intent.putExtra(MERCHANT_NAME, merchant.name);
+
+	    		new MerchantSearchTask(MainActivity.this).execute(intent);
+			}
+			
+		});
+	}
     
 	@Override
 	protected void onCreate(Bundle icicle) {
@@ -140,15 +171,16 @@ public class MainActivity
     void searchButtonClicked(View view)
     {
     	Intent intent = new Intent(this, SearchResultsActivity_.class);
-    	String search = searchBar.getText().toString();
+    	String merchantName = searchBar.getText().toString();
     	
-    	if(search == "" || search.replaceAll("\\s", "") == "")
+    	if(merchantName == "" || merchantName.replaceAll("\\s", "") == "")
     	{
     		return;
     	}
     	
-    	int merchantId = m_mappings.getMerchantId(search);
-    	
+    	int merchantId = m_mappings.getMerchantId(merchantName);
+
+    	intent.putExtra(MERCHANT_NAME, merchantName);
     	if(merchantId == -1)
     	{
     		/* not found */
@@ -160,8 +192,7 @@ public class MainActivity
     	}
     	else
     	{
-        	intent.putExtra("merchantId", merchantId);
-        	intent.putExtra(SEARCH, search);
+        	intent.putExtra(MERCHANT_ID, merchantId);
 
     		new MerchantSearchTask(this).execute(intent);	
     	}

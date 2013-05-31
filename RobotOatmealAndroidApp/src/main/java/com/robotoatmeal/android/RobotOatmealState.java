@@ -7,21 +7,23 @@ public class RobotOatmealState extends Application
 	public boolean tasksScheduled = false;
 	public IMappings mappings = new MerchantMappingsArray();
 	public Search savedSearch = new Search();
+	public int merchantId;
 	
 	public class Search
 	{
-		public String query;
+		public int merchantId;
+		public String merchantName;
 		public CouponContainer results;
 		
 		public Search()
 		{
-			query = null;
-			results = null;
+			clearSearchResults();
 		}
 		
 		public void clearSearchResults()
 		{
-			query = null;
+			merchantId = -1;
+			merchantName = null;
 			results = null;
 		}
 	}

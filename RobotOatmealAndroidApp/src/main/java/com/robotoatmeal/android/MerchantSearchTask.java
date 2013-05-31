@@ -4,7 +4,6 @@ import org.springframework.http.ContentCodingType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.ResourceAccessException;
@@ -49,7 +48,7 @@ public class MerchantSearchTask extends AsyncTask<Intent, Void, CouponContainer>
 		/* Uncompress GZIP output */
 		m_httpClient.getMessageConverters().add(new StringHttpMessageConverter());
 		
-		int merchantId = m_intent.getIntExtra("merchantId", -1);
+		int merchantId = m_intent.getIntExtra(MainActivity_.MERCHANT_ID, -1);
 		
 		String endpointUrl = BASE_URI + API_KEY + PUBLISHER_ID + 
 				FORMAT + "&merchantId=" + merchantId;

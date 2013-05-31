@@ -27,7 +27,8 @@ public class SearchResultsActivity extends Activity {
 	TextView message;
 	
 	private RobotOatmealState m_appState;
-	private String search;
+	private int merchantId;
+	private String merchantName;
 	private CouponContainer results;
 	
 	@Override
@@ -50,7 +51,6 @@ public class SearchResultsActivity extends Activity {
 	private void loadSearchResults()
 	{
 		Intent intent = getIntent();
-		search = intent.getStringExtra(MainActivity.SEARCH);
 		results = (CouponContainer) intent.getParcelableExtra(MainActivity.RESULTS);
 
 		if(results == null)
@@ -68,7 +68,8 @@ public class SearchResultsActivity extends Activity {
 	{
 		if(results != null)
 		{
-			m_appState.savedSearch.query = search;
+			m_appState.savedSearch.merchantId = merchantId;
+			m_appState.savedSearch.merchantName = merchantName;
 			m_appState.savedSearch.results = results;
 		}
 	}
@@ -77,7 +78,8 @@ public class SearchResultsActivity extends Activity {
 	{
 		if(results == null)
 		{
-			search = m_appState.savedSearch.query;
+			merchantId = m_appState.savedSearch.merchantId;
+			merchantName = m_appState.savedSearch.merchantName;
 			results = m_appState.savedSearch.results;
 		}
 	}
@@ -122,7 +124,7 @@ public class SearchResultsActivity extends Activity {
 	{
 		if(results == null || results.totalResults == 0)
 		{
-			message.setText("Oops, we can't find any coupons for " + search);
+			message.setText("Oops, we can't find any coupons for " + merchantName);
 		}
 		else
 		{
@@ -132,7 +134,7 @@ public class SearchResultsActivity extends Activity {
 	
 	void displaySearchResults()
 	{
-		message.setText("Search results for " + search);
+		message.setText("Search results for " + merchantName);
 		
 		GridView grid = (GridView) findViewById(R.id.grid);
 		
@@ -151,6 +153,8 @@ public class SearchResultsActivity extends Activity {
 				String couponDetail = gson.toJson(coupon, Coupon.class);
 	
 				Intent intent = new Intent(SearchResultsActivity.this, CouponDetailActivity_.class);
+				intent.putExtra(MainActivity.MERCHANT_ID, merchantId);
+				intent.putExtra(MainActivity.MERCHANT_NAME, merchantName);
 				intent.putExtra(MainActivity.COUPON_DETAIL, couponDetail);
 				startActivity(intent);
 			}
