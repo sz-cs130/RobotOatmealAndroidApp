@@ -51,6 +51,8 @@ public class SearchResultsActivity extends Activity {
 	private void loadSearchResults()
 	{
 		Intent intent = getIntent();
+		merchantId = intent.getIntExtra(MainActivity.MERCHANT_ID, -1);
+		merchantName = intent.getStringExtra(MainActivity.MERCHANT_NAME);
 		results = (CouponContainer) intent.getParcelableExtra(MainActivity.RESULTS);
 
 		if(results == null)
