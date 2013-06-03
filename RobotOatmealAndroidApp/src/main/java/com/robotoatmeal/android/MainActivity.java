@@ -156,6 +156,8 @@ public class MainActivity
 			
 			m_appState.tasksScheduled = true;
 		}
+		
+		m_appState.startFavoritesNotifier();
     }
     
     void attachAutoComplete()

@@ -118,7 +118,7 @@ public class Favorites extends SQLiteOpenHelper {
 	public HashSet<String> getCachedCoupons(int id) {
 	    SQLiteDatabase database = getReadableDatabase();
 	    Cursor cursor = database.query(
-	    		FAVORITE_TABLE_NAME, null, MERCHANT_ID + " = " + id, null, null, null, null);
+	    		CACHED_COUPONS_TABLE_NAME, null, MERCHANT_ID + " = " + id, null, null, null, null);
 	
 	    HashSet<String> cachedCoupons = new HashSet<String>();
 	    while (cursor.moveToNext()) {
