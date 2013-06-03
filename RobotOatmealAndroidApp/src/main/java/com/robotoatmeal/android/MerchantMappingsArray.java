@@ -93,26 +93,9 @@ public class MerchantMappingsArray implements IMappings
 	
 	public String getMerchantName(int id)
 	{
-		int key = id;
-		int lo = 0;
-		int hi = m_merchants.length - 1;
-		
-		while(lo <= hi)
-		{
-			int mid = lo + (hi - lo) / 2;
-			
-			if(key == m_merchants[mid].id)
-			{
-				return m_merchants[mid].name;
-			}
-			else if(key < m_merchants[mid].id)
-			{
-				hi = mid - 1;
-			}
-			else
-			{
-				lo = mid + 1;
-			}
+		for (Merchant merchant: m_merchants) {
+			if (merchant.id == id)
+				return merchant.name;
 		}
 		
 		return null;
