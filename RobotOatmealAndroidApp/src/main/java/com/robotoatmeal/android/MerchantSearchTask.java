@@ -19,10 +19,10 @@ import com.google.gson.GsonBuilder;
 public class MerchantSearchTask extends AsyncTask<Intent, Void, CouponContainer>
 {
 	private RestTemplate m_httpClient;
-	private final String BASE_URI = "http://catalog.bizrate.com/services/catalog/v1/us/coupons?";
-	private final String API_KEY = "&apiKey=54e639e630f129f73d3e77b2a67a0030";
-	private final String PUBLISHER_ID = "&publisherId=1004";
-	private final String FORMAT = "&format=json";
+	static public final String BASE_URI = "http://catalog.bizrate.com/services/catalog/v1/us/coupons?";
+	static public final String API_KEY = "&apiKey=54e639e630f129f73d3e77b2a67a0030";
+	static public final String PUBLISHER_ID = "&publisherId=1004";
+	static public final String FORMAT = "&format=json";
 	private Context m_context;
 	private Intent m_intent;
 	
