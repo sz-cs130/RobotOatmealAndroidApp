@@ -1,37 +1,11 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/GridLayout1"
-    android:background="#45ABC5"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnCount="2"
-    android:orientation="horizontal"
+    android:background="#45ABC5"
+    android:orientation="vertical"
     android:theme="@android:style/Theme.NoTitleBar" >
-
-    <Space />
-
-    <Space />
-
-    <Space
-        android:layout_width="1dp"
-        android:layout_height="15dp" />
-
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_column="0"
-        android:layout_gravity="right|center_vertical"
-        android:layout_row="2"
-        android:text="@string/search" />
-
-    <AutoCompleteTextView
-        android:id="@+id/searchBar"
-        android:layout_width="452dp"
-        android:layout_column="0"
-        android:layout_gravity="center_vertical"
-        android:layout_row="2"
-        android:completionThreshold="1"
-        android:ems="10"
-        android:enabled="false" />
 
     <ImageView
         android:id="@+id/imageView1"
@@ -42,4 +16,42 @@
         android:layout_row="2"
         android:src="@drawable/logo" />
 
-</GridLayout>
+    <LinearLayout
+        android:id="@+id/LinearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <AutoCompleteTextView
+            android:id="@+id/searchBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:completionThreshold="1"
+            android:ems="10"
+            android:enabled="false" >
+
+            <requestFocus />
+        </AutoCompleteTextView>
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/search" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/favorites" />
+
+    <ListView
+        android:id="@+id/favoriteList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+</LinearLayout>
