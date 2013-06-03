@@ -63,6 +63,11 @@ public class SearchResultsActivity extends Activity {
 		{
 			setSavedSearchResults();
 		}
+
+		if (merchantName != null && results != null)
+			setTitle(merchantName);
+		else
+			setTitle("No results found.");
 	}
 	
 	/* ALWAYS check if results is null. Could be destroyed at any moment. */
@@ -122,21 +127,10 @@ public class SearchResultsActivity extends Activity {
 	}
 
 	@AfterViews
-	void validateResults()
-	{
-		if(results == null || results.totalResults == 0)
-		{
-			message.setText("Oops, we can't find any coupons for " + merchantName);
-		}
-		else
-		{
-			displaySearchResults();
-		}
-	}
-	
 	void displaySearchResults()
 	{
-		message.setText("Search results for " + merchantName);
+		if (results == null)
+			return;
 		
 		GridView grid = (GridView) findViewById(R.id.grid);
 		

@@ -40,9 +40,12 @@ public class CouponDetailActivity extends Activity {
 		
 		merchantId = getIntent().getIntExtra(MainActivity.MERCHANT_ID, -1);
 		merchantName = getIntent().getStringExtra(MainActivity.MERCHANT_NAME);
+		
 		String couponDetail = getIntent().getStringExtra(MainActivity.COUPON_DETAIL);
 		Gson gson = new Gson();
 		coupon = gson.fromJson(couponDetail, Coupon.class);
+		
+		setTitle(merchantName + " / " + coupon.couponCode);
 		
 		setContentView(R.layout.activity_coupon_detail);
 		// Show the Up button in the action bar.
