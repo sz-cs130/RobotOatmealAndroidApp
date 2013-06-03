@@ -184,11 +184,10 @@ public class SearchResultsActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (merchantId != -1) {
 			MenuItem favorite_toggle = menu.findItem(R.id.favorite_toggle);
-			FavoriteOpenHelper favoriteOpenHelper = new FavoriteOpenHelper(this);
-			if (favoriteOpenHelper.isFavorite(merchantId))
-				favorite_toggle.setIcon(R.drawable.ic_launcher);
-			else
+			if (m_appState.favorites.get(merchantId) == null)
 				favorite_toggle.setIcon(R.drawable.ic_action_search);
+			else
+				favorite_toggle.setIcon(R.drawable.ic_launcher);
 		}
 		return true;
 	}
@@ -208,8 +207,10 @@ public class SearchResultsActivity extends Activity {
 			return true;
 		case R.id.favorite_toggle:
 			if (merchantId != -1) {
-				FavoriteOpenHelper favoriteOpenHelper = new FavoriteOpenHelper(this);
-				favoriteOpenHelper.toggleFavorite(merchantId, merchantName);
+				if (m_appState.favorites.get(merchantId) == null)
+					m_appState.favorites.add(merchantId);
+				else
+					m_appState.favorites.delete(merchantId);
 				invalidateOptionsMenu();
 			}
 			return true;

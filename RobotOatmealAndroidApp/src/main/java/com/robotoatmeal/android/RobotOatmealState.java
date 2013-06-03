@@ -7,6 +7,7 @@ public class RobotOatmealState extends Application
 	public boolean tasksScheduled = false;
 	public IMappings mappings = new MerchantMappingsArray();
 	public Search savedSearch = new Search();
+	public Favorites favorites;
 	public int merchantId;
 	
 	public class Search

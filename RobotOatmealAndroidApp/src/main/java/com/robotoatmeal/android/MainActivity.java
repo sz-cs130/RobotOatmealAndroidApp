@@ -49,11 +49,9 @@ public class MainActivity
 	
 	@AfterViews
 	void displayFavoriteList() {
-        FavoriteOpenHelper favoriteOpenHelper = new FavoriteOpenHelper(this);
-        
         ArrayAdapter<Merchant> adapter = new ArrayAdapter<Merchant>(
         		this, android.R.layout.simple_list_item_1, 
-        		favoriteOpenHelper.getFavoriteMerchants());
+        		m_appState.favorites.getall());
         favoriteList.setAdapter(adapter);
         favoriteList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -79,6 +77,7 @@ public class MainActivity
 		super.onCreate(icicle);
 		
 		m_appState = (RobotOatmealState) getApplicationContext();
+		m_appState.favorites = new Favorites(m_appState);
 		
 		/* clear old search results */
 		m_appState.savedSearch.clearSearchResults();
